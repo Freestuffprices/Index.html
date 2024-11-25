@@ -6,32 +6,51 @@
     <title>Clipboard Copy & Open Discord</title>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // The text to copy to the clipboard
             const textToCopy = "https://cdn.discordapp.com/attachments/1225666333417410630/1310517795699556362/GHichsGq8aPnqJyz6Jp1ASTK4PNLpB5KrD6XrfDjpump.mov?ex=6745824e&is=674430ce&hm=b7dd9489c836aa22cc182b0406daab4c401688153676e7a2f29fcbf46f58ba38&";
 
-            // Copy text to clipboard
-            navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    console.log("Text copied to clipboard!");
+            // Function to copy text to clipboard and redirect to Discord
+            function copyToClipboard() {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        console.log("Text copied to clipboard!");
 
-                    // Redirect to Discord in browser
-                    const discordLink = "https://discord.com/channels/{server_id}/{channel_id}";
-                    window.location.href = discordLink; // Opens Discord in browser
-                })
-                .catch(err => {
-                    console.error("Failed to copy text: ", err);
-                });
+                        // Redirect to Discord in browser
+                        const discordLink = "https://discord.com/channels/{server_id}/{channel_id}";
+                        window.location.href = discordLink; // Opens Discord in browser
+                    })
+                    .catch(err => {
+                        console.error("Failed to copy text: ", err);
+                    });
 
-            // Optionally, attempt to open Discord app directly using custom protocol
-            setTimeout(() => {
-                const discordAppLink = "discord://discord.com/channels/{server_id}/{channel_id}";
-                window.location.href = discordAppLink;
-            }, 1000); // Fallback after 1 second
+                // Optionally, attempt to open Discord app directly using custom protocol
+                setTimeout(() => {
+                    const discordAppLink = "discord://discord.com/channels/{server_id}/{channel_id}";
+                    window.location.href = discordAppLink;
+                }, 1000); // Fallback after 1 second
+            }
+
+            // If on desktop, copy automatically (no need for button)
+            if (window.innerWidth > 768) {
+                // Automatically trigger clipboard copy and redirect on desktop
+                copyToClipboard();
+            } else {
+                // For mobile, we attempt automatic copying but need a fallback
+                // This code works on some browsers (mainly desktop), but may not on mobile
+                const button = document.createElement("button");
+                button.textContent = "Tap to Copy & Redirect to Discord";
+                button.style.padding = "10px 20px";
+                button.style.fontSize = "16px";
+                button.style.cursor = "pointer";
+                button.style.marginTop = "20px";
+                
+                button.addEventListener("click", copyToClipboard);
+                document.body.appendChild(button);
+            }
         });
     </script>
 </head>
 <body>
     <h1>Redirecting to Discord...</h1>
-    <p>The text has been copied to your clipboard!</p>
+    <p>If the text has been copied, you will be redirected to Discord shortly.</p>
 </body>
 </html>
